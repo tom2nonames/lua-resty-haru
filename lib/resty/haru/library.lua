@@ -118,12 +118,14 @@ typedef enum _HPDF_LineCap {
     HPDF_PROJECTING_SCUARE_END,
     HPDF_LINECAP_EOF
 } HPDF_LineCap;
+
 typedef enum _HPDF_LineJoin {
     HPDF_MITER_JOIN = 0,
     HPDF_ROUND_JOIN,
     HPDF_BEVEL_JOIN,
     HPDF_LINEJOIN_EOF
 } HPDF_LineJoin;
+
 typedef enum _HPDF_ColorSpace {
     HPDF_CS_DEVICE_GRAY = 0,
     HPDF_CS_DEVICE_RGB,
@@ -138,6 +140,7 @@ typedef enum _HPDF_ColorSpace {
     HPDF_CS_PATTERN,
     HPDF_CS_EOF
 } HPDF_ColorSpace;
+
 typedef enum _HPDF_AnnotHighlightMode {
     HPDF_ANNOT_NO_HIGHTLIGHT = 0,
     HPDF_ANNOT_INVERT_BOX,
@@ -375,6 +378,72 @@ HPDF_Destination HPDF_Page_CreateDestination(HPDF_Page page);
  HPDF_Annotation HPDF_Page_CreateURILinkAnnot(HPDF_Page page, HPDF_Rect rect, const char *uri);
      HPDF_STATUS HPDF_TextAnnot_SetOpened(HPDF_Annotation annot, HPDF_BOOL open);
      HPDF_STATUS HPDF_TextAnnot_SetIcon(HPDF_Annotation annot, HPDF_AnnotIcon icon);
+
+
+     /*  native OS integer types */
+     typedef  signed int          HPDF_INT;
+     typedef  unsigned int        HPDF_UINT;
+
+     /*  32bit integer types
+      */
+     typedef  signed int          HPDF_INT32;
+     typedef  unsigned int        HPDF_UINT32;
+
+     /*  16bit integer types
+      */
+     typedef  signed short        HPDF_INT16;
+     typedef  unsigned short      HPDF_UINT16;
+
+     /*  8bit integer types
+      */
+     typedef  signed char         HPDF_INT8;
+     typedef  unsigned char       HPDF_UINT8;
+
+     /*  8bit binary types
+      */
+     typedef  unsigned char       HPDF_BYTE;
+
+     /*  float type (32bit IEEE754)
+      */
+     typedef  float               HPDF_REAL;
+
+     /*  double type (64bit IEEE754)
+      */
+     typedef  double              HPDF_DOUBLE;
+
+     /*  boolean type (0: False, !0: True)
+      */
+     typedef  signed int          HPDF_BOOL;
+
+     /*  error-no type (32bit unsigned integer)
+      */
+     typedef  unsigned long       HPDF_STATUS;
+
+     /*  charactor-code type (16bit)
+      */
+     typedef  HPDF_UINT16         HPDF_CID;
+     typedef  HPDF_UINT16         HPDF_UNICODE;
+
+     HPDF_STATUS HPDF_SaveToStream (HPDF_Doc pdf);
+     HPDF_UINT32 HPDF_GetStreamSize (HPDF_Doc pdf);
+     HPDF_STATUS HPDF_ReadFromStream (HPDF_Doc      pdf,
+                                 HPDF_BYTE    *buf,
+                                 HPDF_UINT32  *size);
+     HPDF_STATUS HPDF_ResetStream (HPDF_Doc pdf);
+
+     HPDF_Image HPDF_LoadRawImageFromMem  (HPDF_Doc           pdf,
+                                      const HPDF_BYTE   *buf,
+                                      HPDF_UINT          width,
+                                      HPDF_UINT          height,
+                                      HPDF_ColorSpace    color_space,
+                                      HPDF_UINT          bits_per_component);
+     HPDF_Image HPDF_LoadPngImageFromMem  (HPDF_Doc           pdf,
+                                      const HPDF_BYTE   *buf,
+                                      HPDF_UINT          size);
+     HPDF_Image HPDF_LoadJpegImageFromMem  (HPDF_Doc           pdf,
+                                      const HPDF_BYTE   *buf,
+                                      HPDF_UINT          size);
+
 ]]
 
 --[[

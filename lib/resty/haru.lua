@@ -16,6 +16,8 @@ local ffi             = require "ffi"
 local ffi_gc          = ffi.gc
 local ffi_str         = ffi.string
 local ffi_new         = ffi.new
+local ffi_cast        = ffi.cast
+local ffi_copy        = ffi.copy
 local setmetatable    = setmetatable
 local lower           = string.lower
 local byte            = string.byte
@@ -72,6 +74,68 @@ function haru:save(file)
         return nil, r
     end
 end
+
+function haru:save_to_stream()
+    local r = lib.HPDF_SaveToStream(self.context)
+    if r == 0 then
+        return self
+    else
+        return nil, r
+    end
+end
+
+function haru:get_stream_size()
+    local r = lib.HPDF_GetStreamSize(self.context)
+    return r
+end
+
+function haru:read_from_stream(size)
+    local buf = ffi_new("HPDF_BYTE[?]", size)
+    local siz = ffi_new("HPDF_UINT32[1]", size)
+
+    local r = lib.HPDF_ReadFromStream(self.context, buf, siz)
+    if r == 0 then
+
+        return buf, siz[0]
+    else
+        return nil, 0, r
+    end
+end
+
+function haru:reset_stream()
+    local r = lib.HPDF_ResetStream(self.context)
+    if r == 0 then
+        return self
+    else
+        return nil, r
+    end
+end
+
+function haru:to_stream()
+
+    self:save_to_stream()
+    local size = self:get_stream_size()
+    self:reset_stream()
+
+    local idx = 0
+    local tmp = ffi_new("HPDF_BYTE[?]", size)
+          tmp = self:read_from_stream(size)
+--[[
+    local p   = ffi_new("HPDF_BYTE *")
+
+    repeat
+        local buf = ffi_new("HPDF_BYTE *")
+        local len = 4096
+        buf,  len = self:read_from_stream(len)
+        p = tmp + idx
+        ffi_copy(p, buf, len)
+        idx = idx + len
+    until(len == 0)
+--]]
+    return tmp, size
+
+end
+
 
 function haru:outline(parent, title, encoder)
     return outline.new(lib.HPDF_CreateOutline(self.context, parent, title, type(encoder) == "table" and encoder.context or nil))
