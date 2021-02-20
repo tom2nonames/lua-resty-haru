@@ -2,6 +2,12 @@
 
 LuaJIT FFI Bindings to Haru – Free PDF Library. This library is almost done as you can see on [TODO](#todo). Some missing API bindings will be added shortly, or on request.
 
+## Install
+
+```bash
+opm get tom2nonames/lua-resty-haru
+```
+
 ## Synopsis
 
 ```lua

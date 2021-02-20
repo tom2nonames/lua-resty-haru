@@ -28,6 +28,8 @@ local type            = type
 local date            = ffi_new "HPDF_Date"
 local haru            = {}
 
+haru._VERSION = '0.0.1'
+
 function haru.new()
     local self = setmetatable({ context = ffi_gc(lib.HPDF_New(nil, nil), lib.HPDF_Free) }, haru)
     self.pages = pages.new(self.context)
