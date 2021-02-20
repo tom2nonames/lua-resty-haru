@@ -264,6 +264,20 @@ logo.colormask = {
 -- Drawing Image
 page:image(logo, 450, 450, 100, 100)
 
+-- Load Image from Mem
+local f = io.open("logo.png", "r")
+local blob = f:read("*a")
+f:close()
+
+local len = #blob
+local buf = ffi.new("char[?]",len)
+ffi.copy(buf, blob, len)
+
+local logo1 = images:load_from_mem("png", buf, len)
+
+page:image(logo1, 400, 400)
+
+
 -- Creating a Destination
 local dest = page:destination();
 
@@ -312,6 +326,21 @@ hpdf:pagelabel(0, "upperroman", 1, "");
 
 -- Saving PDF
 hpdf:save "demo.pdf"
+
+
+-- PDF to Stream
+
+local blob, len = hpdf:to_stream()
+
+local buf = ffi.new("char[?]",len)
+ffi.copy(buf, blob, len)
+
+local file = io.open("test.pdf", "a")
+
+file:write(ffi.string(buf,len))
+
+file:close()
+
 ```
 
 ## TODO
